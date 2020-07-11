@@ -37,17 +37,17 @@ app.get('/flights/', (req, res) => {
     } else {
         let results = [];
         let filter = {
-            "Partida.Prevista": utils.encapsulateInLikeRegex(departure),
-            "Cidade.Origem": utils.encapsulateInLikeRegex(origin),
-            "Cidade.Destino": utils.encapsulateInLikeRegex(destination)
+            "departure": utils.encapsulateInLikeRegex(departure),
+            "from": utils.encapsulateInLikeRegex(origin),
+            "to": utils.encapsulateInLikeRegex(destination)
         };
-        company ? filter["Companhia.Aerea"] = utils.encapsulateInLikeRegex(company) : '';
-        console.log(filter);
+        company ? filter["company"] = utils.encapsulateInLikeRegex(company) : '';
         mongoRS.find(filter).toArray((err, result) => {
             if(err) {
                 res.status(500).send("Sorry, something bad happened :(");
                 throw err;
             } else {
+                console.log(result);
                 res.status(200).send(result);
             }
         })
@@ -55,8 +55,17 @@ app.get('/flights/', (req, res) => {
 });
 
 app.post('/flights/', (req, res) => {
-    console.log(req.body);
-    return res.status(200).send("post is ok");
+    let data = req.body;
+    if(data.from && data.to && data.departure && data.company) {
+
+        return res.status(200).send(data);
+    } else {
+        return res.status(400).send(`Bad post request. Please send the following mandatory data: 
+                                    to: string
+                                    from: string
+                                    departure: datetime in YYYY-MM-DDTHH:MM:SSZ format
+                                    company: string`)
+    }
 });
 
 app.listen(process.env.PORT || 8080);
