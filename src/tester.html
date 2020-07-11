@@ -114,14 +114,14 @@
             </div>
             <div class="flightsChecker w-40">
                 <h2>Flights Checker</h2>
-                <form id="flightsCheckerForm" action="/flights" method="post" target="_blank">
+                <form id="flightsCheckerForm" action="/flights" method="get" target="_blank">
                     <label for="flightCheckerOrigin">From:</label>
                     <input name="from" id="flightCheckerOrigin" type="text" required placeholder="e.g.: Vancouver">
                     <label for="flightCheckerDestination">To:</label>
                     <input name="to" id="flightCheckerDestination" type="text" required placeholder="e.g.: São Paulo">
                     <label for="flightCheckerDeparture">Expected Departure At:</label>
                     <input name="departure" id="flightCheckerDeparture" type="text" placeholder="YYYY-MM-DD" required>
-                    <label for="flightCheckerCompany">Expected Departure At:</label>
+                    <label for="flightCheckerCompany">Airline:</label>
                     <input name="company" id="flightCheckerCompany" type="text" placeholder="Optional, e.g.: AMERICAN AIRLINES">
                     <button type="submit" id="flightsCheckerSubmit">Search Flights</button>
                 </form>
