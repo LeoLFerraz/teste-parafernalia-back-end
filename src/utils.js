@@ -1,5 +1,5 @@
 function encapsulateInLikeRegex(param) {
-    return new RegExp(".*" + param + ".*");
+    return new RegExp(".*" + param + ".*", "ig");
 }
 
 function validateDateTimeFormat(string) {

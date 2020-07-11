@@ -30,6 +30,7 @@ app.get('/tester', (req, res) => {
 });
 
 app.get('/flights/', (req, res) => {
+    // TODO: Replace special characters (big regex, lazy);
     const departure = req.query.departure;
     const origin = req.query.from;
     const destination = req.query.to;
@@ -63,13 +64,12 @@ app.post('/flights/', (req, res) => {
         if(utils.validateDateTimeFormat(data.departure)) {
             // TODO: check for double entries
             mongoRS.insertOne(data).then((response) => {
-                console.log(response);
+                return res.status(200).send(response);
             });
         } else {
             return res.status(400).send(`Bad post request. Please send the following required data: 
                                     departure: datetime in YYYY-MM-DDTHH:MM:SSZ format`);
         }
-        return res.status(200).send(data);
     } else {
         return res.status(400).send(`Bad post request. Please send the following required data: 
                                     to: string

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Parafernalia API Tester</title>
         <style>
             body, html {
                 padding: 0;
                 margin: 0;
+                font-family: sans-serif;
             }
             * {
                 box-sizing: border-box;
@@ -13,14 +15,15 @@
             form {
                 display: flex;
                 flex-direction: column;
-                flex-grow: 0;
-                max-width: 30%;
             }
             .flightsFormContainer {
                 position: relative;
             }
             form > button {
                 margin-top: 10px;
+            }
+            h1 {
+                text-align: center;
             }
             .alert {
                 padding: 5px;
@@ -33,7 +36,6 @@
                 width: 100%;
                 transition: all 0.6s ease;
             }
-
             .closebtn {
                 color: white;
                 font-weight: bold;
@@ -42,7 +44,6 @@
                 line-height: 18px;
                 cursor: pointer;
             }
-
             .closebtn:hover {
                 color: black;
             }
@@ -50,31 +51,81 @@
                 background-color: #4CAF50;
                 bottom: -150px;
             }
+            .f-row {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                flex-wrap: wrap;
+            }
+            .f-row h2 {
+                text-align: center;
+            }
+            .w-40 {
+                width: 40%;
+                min-width: 400px;
+            }
+            @media (max-width: 768px) {
+                .w-40 {
+                    /* :D */
+                    width: 90%;
+                    min-width: 200px;
+                    margin-bottom: 20px;
+                }
+            }
+            label {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            input {
+                border: 0;
+                border-bottom: 1px solid #eee;
+                margin-bottom: 10px;
+            }
+            input:focus {
+                outline: none;
+            }
         </style>
     </head>
     <body>
         <h1>Parafernalia API Tester</h1>
-        <div class="flightsFormContainer">
-            <h2>Flights Tester</h2>
-            <div class="alert" id="errorFlashMsg">
-                <span class="closebtn" onclick="this.parentElement.style.opacity='0';">&times;</span>
-                <strong>Error!</strong> Could not save new flight info.
+        <div class="f-row">
+            <div class="flightsFormContainer w-40">
+                <h2>New Flight Form</h2>
+                <div class="alert" id="errorFlashMsg">
+                    <span class="closebtn" onclick="this.parentElement.style.opacity='0';">&times;</span>
+                    <strong>Error!</strong> Could not save new flight info.
+                </div>
+                <div class="alert success" id="successFlashMsg">
+                    <span class="closebtn" onclick="this.parentElement.style.opacity='0';">&times;</span>
+                    <strong>Yay!</strong> Flight info saved :D
+                </div>
+                <form id="flightForm">
+                    <label for="flightOrigin">From:</label>
+                    <input type="text" name="from" id="flightOrigin" required>
+                    <label for="flightDestination">To:</label>
+                    <input type="text" name="to" id="flightDestination" required>
+                    <label for="flightDeparture">Departure Date and Time:</label>
+                    <input type="text" name="departure" id="flightDeparture" required>
+                    <label for="flightCompany">Desired Flight Company:</label>
+                    <input type="text" name="company" id="flightCompany" required>
+                    <button type="submit">New Flight</button>
+                </form>
             </div>
-            <div class="alert success" id="successFlashMsg">
-                <span class="closebtn" onclick="this.parentElement.style.opacity='0';">&times;</span>
-                <strong>Yay!</strong> Flight info saved :D
+            <div class="flightsChecker w-40">
+                <h2>Flights Checker</h2>
+                <form id="flightsCheckerForm" action="/flights" method="post" target="_blank">
+                    <label for="flightCheckerOrigin">From:</label>
+                    <input name="from" id="flightCheckerOrigin" type="text" required placeholder="e.g.: Vancouver">
+                    <label for="flightCheckerDestination">To:</label>
+                    <input name="to" id="flightCheckerDestination" type="text" required placeholder="e.g.: São Paulo">
+                    <label for="flightCheckerDeparture">Expected Departure At:</label>
+                    <input name="departure" id="flightCheckerDeparture" type="text" placeholder="YYYY-MM-DD" required>
+                    <label for="flightCheckerCompany">Expected Departure At:</label>
+                    <input name="company" id="flightCheckerCompany" type="text" placeholder="Optional, e.g.: AMERICAN AIRLINES">
+                    <button type="submit" id="flightsCheckerSubmit">Search Flights</button>
+                </form>
             </div>
-            <form id="flightForm">
-                <label for="flightOrigin">From:</label>
-                <input type="text" name="from" id="flightOrigin" required>
-                <label for="flightDestination">To:</label>
-                <input type="text" name="to" id="flightDestination" required>
-                <label for="flightDeparture">Departure Date and Time:</label>
-                <input type="text" name="departure" id="flightDeparture" required>
-                <label for="flightCompany">Desired Flight Company:</label>
-                <input type="text" name="company" id="flightCompany" required>
-                <button type="submit">New Flight</button>
-            </form>
         </div>
     <script>
         document.addEventListener("DOMContentLoaded", (e) => {
