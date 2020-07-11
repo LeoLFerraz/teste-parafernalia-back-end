@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const utils = require('./utils');
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
 
 // MONGO DB
 
@@ -35,7 +38,6 @@ app.get('/flights/', (req, res) => {
         return res.status(401).send(`Invalid query parameters. Please choose a place of origin (?from=SÃO+PAULO), a
                                      destination (?to=NEW+YORK) and a departure date. (?departure=2020-08-14)`);
     } else {
-        let results = [];
         let filter = {
             "departure": utils.encapsulateInLikeRegex(departure),
             "from": utils.encapsulateInLikeRegex(origin),
@@ -47,7 +49,6 @@ app.get('/flights/', (req, res) => {
                 res.status(500).send("Sorry, something bad happened :(");
                 throw err;
             } else {
-                console.log(result);
                 res.status(200).send(result);
             }
         })
@@ -56,15 +57,25 @@ app.get('/flights/', (req, res) => {
 
 app.post('/flights/', (req, res) => {
     let data = req.body;
+    // Validate if all required fields are present
     if(data.from && data.to && data.departure && data.company) {
-
+        // Validate datetime format
+        if(utils.validateDateTimeFormat(data.departure)) {
+            // TODO: check for double entries
+            mongoRS.insertOne(data).then((response) => {
+                console.log(response);
+            });
+        } else {
+            return res.status(400).send(`Bad post request. Please send the following required data: 
+                                    departure: datetime in YYYY-MM-DDTHH:MM:SSZ format`);
+        }
         return res.status(200).send(data);
     } else {
-        return res.status(400).send(`Bad post request. Please send the following mandatory data: 
+        return res.status(400).send(`Bad post request. Please send the following required data: 
                                     to: string
                                     from: string
                                     departure: datetime in YYYY-MM-DDTHH:MM:SSZ format
-                                    company: string`)
+                                    company: string`);
     }
 });
 
